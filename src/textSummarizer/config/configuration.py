@@ -1,6 +1,6 @@
 from textSummarizer.constants import*
 from textSummarizer.utils.common import read_yaml, create_directories
-from textSummarizer.entity.config_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig
+from textSummarizer.entity.config_entity import DataIngestionConfig, DataValidationConfig, DataTransformationConfig, ModelTrainerConfig, ModelEvaluationConfig
 
 class ConfigurationManager:
     def __init__(self, 
@@ -44,3 +44,40 @@ class ConfigurationManager:
             tokenizer_name= config.tokenizer_name
         )
         return data_transformation_config
+
+
+    def get_model_trainer_configuration(self) -> ModelTrainerConfig:
+        # print("in the get model trainer confg method")
+        config = self.config.model_trainer
+        # print(f"num_trains_epochs")
+        # print(f"num_trains_epochs: {self.params}")
+        model_trainer_config = ModelTrainerConfig(
+            root_dir= config.root_dir, 
+            data_path= config.data_path,
+            model_ckpt= config.model_ckpt,
+            num_train_epochs= self.params.TrainingArguments.num_train_epochs, 
+            warmup_steps= self.params.TrainingArguments.warmup_steps,
+            per_device_train_batch_size= self.params.TrainingArguments.per_device_train_batch_size,
+            weight_decay= self.params.TrainingArguments.weight_decay,
+            logging_steps= self.params.TrainingArguments.logging_steps,
+            evalution_strategy= self.params.TrainingArguments.evalution_strategy,
+            eval_steps= self.params.TrainingArguments.eval_steps,
+            save_steps= self.params.TrainingArguments.save_steps,
+            gradient_accumulation_steps= self.params.TrainingArguments.gradient_accumulation_steps
+        )
+
+        return model_trainer_config
+    
+    
+    def get_model_evaluation_config(self) -> ModelEvaluationConfig:
+        config = self.config.model_evaluation
+
+        model_evaluation_config = ModelEvaluationConfig(
+            root_dir= config.root_dir,
+            data_path= config.data_path,
+            model_path= config.model_path,
+            tokenizer_path= config.tokenizer_path,
+            metric_file_name= config.metric_file_name
+        )
+
+        return model_evaluation_config
