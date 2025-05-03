@@ -1,5 +1,5 @@
 from textSummarizer.config.configuration import ConfigurationManager
-from textSummarizer.entity.config_entity import ModelEvaluationConfig
+from textSummarizer.components.model_evaluation import ModelEvaluation
 
 class ModelEvaluationPipeline:
     def __init__(self):
@@ -7,5 +7,5 @@ class ModelEvaluationPipeline:
     def main(self):
         config = ConfigurationManager()
         model_evaluation_config = config.get_model_evaluation_config()
-        model_evaluation = ModelEvaluationConfig(config = model_evaluation_config)
+        model_evaluation = ModelEvaluation(model_evaluation_config)
         model_evaluation.evaluate()

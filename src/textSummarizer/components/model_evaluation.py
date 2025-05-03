@@ -23,6 +23,7 @@ class ModelEvaluation:
                                batch_size=16, device="cuda" if torch.cuda.is_available() else "cpu", 
                                column_text="article", 
                                column_summary="highlights"):
+        print(dataset.keys())
         article_batches = list(self.generate_batch_sized_chunks(dataset[column_text], batch_size))
         target_batches = list(self.generate_batch_sized_chunks(dataset[column_summary], batch_size))
 
@@ -69,8 +70,9 @@ class ModelEvaluation:
         score = self.calculate_metric_on_test_ds(
         dataset_samsum_pt['test'][0:10], rouge_metric, model_pegasus, tokenizer, batch_size = 2, column_text = 'dialogue', column_summary= 'summary'
             )
+        print(score["rouge1"])
 
-        rouge_dict = dict((rn, score[rn].mid.fmeasure ) for rn in rouge_names )
+        rouge_dict = dict((rn, score[rn] ) for rn in rouge_names )
 
         df = pd.DataFrame(rouge_dict, index = ['pegasus'] )
         df.to_csv(self.config.metric_file_name, index=False)
